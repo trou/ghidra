@@ -37,6 +37,16 @@
      	0x4e800420	# bctr
      </data>
   </pattern>
+  <pattern>
+     <data>
+        0xf84100..  # std	r2,0x##(r1)
+        0xe982....	# ld		r12,0x####(r2)
+        0x7d8903a6	# mtspr	CTR,r12
+        0xe842....  # ld, r2, xxxx(r2)
+        0x28220000  # cmpldi r2, 0
+        0x4ce20420	# bnectr
+     </data>
+  </pattern>
   <!-- It is possible that the patterns below always appear inline and not used as a thunk -->
   <pattern> 
      <data>
