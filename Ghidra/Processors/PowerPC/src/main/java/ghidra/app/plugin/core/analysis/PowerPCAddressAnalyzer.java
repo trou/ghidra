@@ -39,6 +39,7 @@ import ghidra.program.util.*;
 import ghidra.util.Msg;
 import ghidra.util.exception.*;
 import ghidra.util.task.TaskMonitor;
+import ghidra.app.util.bin.format.elf.extend.PowerPC64_ElfExtension;
 
 public class PowerPCAddressAnalyzer extends ConstantPropagationAnalyzer {
 
@@ -638,24 +639,25 @@ public class PowerPCAddressAnalyzer extends ConstantPropagationAnalyzer {
 		if (PefLoader.PEF_NAME.equals(program.getExecutableFormat())) {
 			return findPefR2Value(program, start);
 		}
-//		if (ElfLoader.ELF_NAME.equals(program.getExecutableFormat())) {
-//			return findElfR2Value(program, start);
-//		}
+		if (ElfLoader.ELF_NAME.equals(program.getExecutableFormat())) {
+			return findElfR2Value(program, start);
+		}
 		return null;
 	}
 
-//	private RegisterValue findElfR2Value(Program program, Address start) {
-//
-//		// look for TOC_BASE injected by PowerPC_ElfExtension
-//		Symbol tocSym = SymbolUtilities.getLabelOrFunctionSymbol(program,
-//			PowerPC64_ElfExtension.TOC_BASE, this, false);
-//		if (tocSym == null) {
-//			return null;
-//		}
-//
-//		Register r2 = program.getRegister("r2");
-//		return new RegisterValue(r2, BigInteger.valueOf(tocSym.getAddress().getOffset()));
-//	}
+private RegisterValue findElfR2Value(Program program, Address start) {
+
+	// look for TOC_BASE injected by PowerPC_ElfExtension
+	Symbol tocSym = SymbolUtilities.getLabelOrFunctionSymbol(program,
+		PowerPC64_ElfExtension.TOC_BASE,
+				err -> {});
+	if (tocSym == null) {
+		return null;
+	}
+
+	Register r2 = program.getRegister("r2");
+	return new RegisterValue(r2, BigInteger.valueOf(tocSym.getAddress().getOffset()));
+}
 
 	private RegisterValue findPefR2Value(Program program, Address start) {
 

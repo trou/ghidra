@@ -272,7 +272,10 @@ public class PPC64CallStubAnalyzer extends AbstractAnalyzer {
 			public boolean evaluateDestination(VarnodeContext context, Instruction instruction) {
 				
 				// We only handle indirect branch through CTR register
-				if (!"bctr".equals(instruction.getMnemonicString())) {
+				if (!"bctr".equals(instruction.getMnemonicString())
+					&& !"bnectr".equals(instruction.getMnemonicString())
+					&& !"bectr".equals(instruction.getMnemonicString())
+                ) {
 					return true;
 				}
 				
